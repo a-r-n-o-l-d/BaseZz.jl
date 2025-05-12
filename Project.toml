@@ -1,0 +1,13 @@
+name = "BaseZz"
+uuid = "76171be9-0d6b-4c15-96ae-d6a41202f9dc"
+authors = ["Arnold"]
+version = "1.0.0-DEV"
+
+[compat]
+julia = "1.10"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
