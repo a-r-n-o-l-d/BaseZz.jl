@@ -1,12 +1,16 @@
 module BaseZz
 
 using Skipper
+using .Threads: @threads, nthreads, threadid
+
+export SingleThread, MultiThreads
 
 struct SingleThread end
 struct MultiThreads end
 
 # To do : histogram multithrede pour grosses images, quantile approx par histogram pour rapidite vision
 
+export fastextrema
 include("utils.jl")
 
 #=
@@ -35,6 +39,7 @@ function unsafe_maximum(x) # benchmark avec Skipper pour abstract float
   b
 end
 =#
+
 # Rectangular range
 function hbox(I::T, J::T; stride = one(I)) where T<:CartesianIndex # stride Int aussi
   ind = []
