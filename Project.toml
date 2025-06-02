@@ -4,9 +4,15 @@ authors = ["Arnold"]
 version = "0.1.0"
 
 [deps]
+ImageBase = "c817782e-172a-44cc-b673-b171935fbb9e"
+ImageCore = "a09fc81d-aa75-5fe9-8630-4744c3626534"
+Reexport = "189a3867-3050-52da-a836-e630ba90ab69"
 Skipper = "fc65d762-6112-4b1c-b428-ad0792653d81"
 
 [compat]
+ImageBase = "0.1.7"
+ImageCore = "0.10.5"
+Reexport = "1.2.2"
 Skipper = "0.1.15"
 julia = "1.11"
 

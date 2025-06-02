@@ -1,5 +1,8 @@
 module BaseZz
 
+using Reexport
+@reexport using ImageCore
+@reexport using ImageBase
 using Skipper
 using .Threads: @threads, nthreads, threadid
 
@@ -11,6 +14,7 @@ struct MultiThreads end
 # To do : histogram multithrede pour grosses images, quantile approx par histogram pour rapidite vision
 
 export fastextrema
+
 include("utils.jl")
 
 #=

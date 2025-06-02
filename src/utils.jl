@@ -2,7 +2,7 @@
 function fastextrema(x)
     mini = x |> eltype |> typemax
     maxi = x |> eltype |> typemin
-    for v in x
+    @inbounds for v in x
         if v < mini
             mini = v
         end
@@ -13,7 +13,7 @@ function fastextrema(x)
     return mini, maxi
 end
 
-fastextrema(x::AbstractArray{T}) where T<:AbstractFloat = fastextrema(skip(isnan, x))
+fastextrema(x::AbstractArray{T}) where T<:AbstractFloat = fastextrema(skip(isnan || !isfinite, x)) # -Inf Inf ???
 
 #=
 function extremaz(::Type{SingleThread}, x) # 2 fois plus rapide que extrema
