@@ -1,8 +1,8 @@
 module BaseZz
 
 using Reexport
-@reexport using ImageCore
-@reexport using ImageBase
+@reexport using ImageCore, ImageBase, ImageAxes, ImageMetadata
+# ColorTypes, Colors, FixedPointNumber
 using Skipper
 using .Threads: @threads, nthreads, threadid
 
