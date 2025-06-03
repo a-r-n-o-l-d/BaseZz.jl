@@ -12,20 +12,20 @@ const RealPixel{T<:Real} = Union{T,AbstractGray{T}}
 # Complex int...?
 const FloatPixel{T<:AbstractFloat} = Union{T,AbstractGray{T}} #,<:Color{AbstractFloat,1}
 #const GenericRealIterable = Union{AbstractArray{RealPixel}}
-const GenericRealImage{T<:RealPixel,N} = AbstractArray{T,N}
-const GenericFloatImage{T<:FloatPixel,N} = AbstractArray{T,N}
+const RealImage{T<:RealPixel,N} = AbstractArray{T,N}
+const FloatImage{T<:FloatPixel,N} = AbstractArray{T,N}
 #=
 RealArraySkipper{P} = Skipper.Skip{P,GenericRealImage}
 RealArraySkipper2{P} = Skipper.Skip{P,<:GenericRealImage}
 RealArraySkipper3{P,A<:GenericRealImage} = Skipper.Skip{P,A}
 =#
-const GenericRealSkipper{P,A<:GenericRealImage} = Skipper.Skip{P,A}
-const GenericRealImageSkipper = Union{GenericRealImage,GenericRealSkipper}
+const RealSkipper{P,A<:RealImage} = Skipper.Skip{P,A}
+const GenericRealImageSkipper = Union{RealImage,RealSkipper}
 
 const MultiChannelRealPixel{T<:Real,N} = Color{T,N}
-const GenericMultiChannelRealImage{T<:MultiChannelRealPixel,N} = AbstractArray{T,N}
+const MultiChannelRealImage{T<:MultiChannelRealPixel,N} = AbstractArray{T,N}
 
-const GenericMultiChannelRealSkipper{P,A<:GenericMultiChannelRealImage} = Skipper.Skip{P,A}
+const MultiChannelRealSkipper{P,A<:MultiChannelRealImage} = Skipper.Skip{P,A}
 #const GenericMultiChannelRealImageSkipper{T<:MultiChannelRealPixel} = Union{GenericMultiChannelRealImage{T},<:GenericMultiChannelRealSkipper{P,GenericMultiChannelRealImage{T}}} where P
 
 #=
@@ -69,9 +69,9 @@ function fastextrema(x::GenericRealImageSkipper)
     return mini, maxi
 end
 
-fastextrema(x::GenericFloatImage) = fastextrema(skip(isnotnumber, x)) #where T<:AbstractFloat
+fastextrema(x::FloatImage) = fastextrema(skip(isnotnumber, x)) #where T<:AbstractFloat
 
-function fastextrema(x::GenericMultiChannelRealImage{T}) where T<:MultiChannelRealPixel
+function fastextrema(x::MultiChannelRealImage{T}) where T<:MultiChannelRealPixel
     #extvals = [(zero(eltype(T)), zero(eltype(T))) for _ in 1:length(T)]
     minis = zeros(eltype(T), length(T))
     maxis = zeros(eltype(T), length(T))
@@ -81,7 +81,7 @@ function fastextrema(x::GenericMultiChannelRealImage{T}) where T<:MultiChannelRe
     return T(minis...), T(maxis...) #extvals
 end
 
-function fastextrema(x::GenericMultiChannelRealSkipper{P,A}) where {P,A}
+function fastextrema(x::MultiChannelRealSkipper{P,A}) where {P,A}
     T = eltype(A)
     minis = zeros(eltype(T), length(T))
     maxis = zeros(eltype(T), length(T))
@@ -105,7 +105,7 @@ fastextrema(x) = error(
         - arrays of `Gray` colorants
         - arrays of `AbstractFloat` numbers with eventually `NaN`, `missing`, `Inf` or `-Inf` values
         - arrays of multi-channels `Colorant{T,N}` where `T` is a `Real` type
-        - a `Skip` type of above types defined by package `Skipper.jl`
+        - a `Skip` type for arrays of above types defined by package `Skipper.jl`
     See `fastextrema` documentation for more details.
     """
 )
