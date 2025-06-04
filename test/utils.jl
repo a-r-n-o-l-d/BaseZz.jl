@@ -61,3 +61,56 @@ end
     unsupported_data = ["a", "b", "c"]
     @test_throws ErrorException fastextrema(unsupported_data)
 end
+
+
+# 3. Test cases for hbox function
+# -------------------------------
+
+# Test for basic 2D range without stride
+@testset "Basic 2D range without stride" begin
+    I = CartesianIndex(3, 3)
+    J = CartesianIndex(7, 7)
+    result = hbox(I, J)
+    expected = CartesianIndices((3:1:7, 3:1:7))
+    @test result == expected
+end
+
+# Test for 2D range with stride
+@testset "2D range with stride" begin
+    I = CartesianIndex(3, 3)
+    J = CartesianIndex(7, 7)
+    stride = CartesianIndex(2, 2)
+    result = hbox(I, J, stride=stride)
+    expected = CartesianIndices((3:2:7, 3:2:7))
+    @test result == expected
+end
+
+# Test for 3D range without stride
+@testset "Basic 3D range without stride" begin
+    I = CartesianIndex(1, 1, 1)
+    J = CartesianIndex(4, 4, 4)
+    result = hbox(I, J)
+    expected = CartesianIndices((1:1:4, 1:1:4, 1:1:4))
+    @test result == expected
+end
+
+# Test for 3D range with stride
+@testset "3D range with stride" begin
+    I = CartesianIndex(1, 1, 1)
+    J = CartesianIndex(5, 5, 5)
+    stride = CartesianIndex(2, 2, 2)
+    result = hbox(I, J, stride=stride)
+    expected = CartesianIndices((1:2:5, 1:2:5, 1:2:5))
+    @test result == expected
+end
+
+# Test for subsetting an array using the generated indices
+@testset "Subsetting an array" begin
+    A = reshape(1:64, 8, 8)
+    I = CartesianIndex(3, 3)
+    J = CartesianIndex(7, 7)
+    indices = hbox(I, J)
+    subset = A[indices]
+    expected_subset = [19 27 35 43 51; 20 28 36 44 52; 21 29 37 45 53; 22 30 38 46 54; 23 31 39 47 55]
+    @test subset == expected_subset
+end

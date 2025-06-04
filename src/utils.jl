@@ -223,7 +223,7 @@ julia> view(A, b2)
  23  39  55
 ```
 """
-function hbox(I::T, J::T; stride = one(I)) where T<:CartesianIndex # stride Int aussi
+function hbox(I::T, J::T; stride = oneunit(I)) where T<:CartesianIndex # stride Int aussi
   ind = []
   gp = @. Tuple((I, stride, J))
   for (i, s, j) ∈ zip(gp...)
