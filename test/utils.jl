@@ -1,0 +1,52 @@
+# Test cases for isnumber function
+@testset "isnumber tests" begin
+    @test isnumber(5.0) == true
+    @test isnumber(-3.2) == true
+    @test isnumber(0) == true
+    @test isnumber(NaN) == false
+    @test isnumber(Inf) == false
+    @test isnumber(-Inf) == false
+end
+
+
+# Test cases for fastextrema function
+
+# Test with an array of real numbers
+@testset "Real numbers" begin
+    data = [1.0, 2.0, 3.0, 4.0, 5.0]
+    mini, maxi = fastextrema(data)
+    @test mini == 1.0
+    @test maxi == 5.0
+end
+
+# Test with an array of AbstractFloat numbers containing NaN, Inf, or -Inf
+@testset "AbstractFloat with special values" begin
+    data = [1.0, NaN, Inf, -Inf, 2.0, 3.0]
+    mini, maxi = fastextrema(data)
+    @test mini == 1.0
+    @test maxi == 3.0
+end
+
+# Test with a multi-channel image
+@testset "Multi-channel image" begin
+    img = rand(RGB{N0f8}, 10, 10)
+    mini, maxi = fastextrema(img)
+    @test red(mini) <= red(maxi)
+    @test green(mini) <= green(maxi)
+    @test blue(mini) <= blue(maxi)
+end
+
+# Test with a grayscale image using Skipper.jl
+@testset "Grayscale image with Skipper" begin
+    img = rand(Gray{N0f8}, 10, 10)
+    filtered_img = skip(x -> x < 0.5, img)
+    mini, maxi = fastextrema(filtered_img)
+    @test mini >= 0.5
+    @test maxi >= mini
+end
+
+# Test with an unsupported type
+@testset "Unsupported type" begin
+    unsupported_data = ["a", "b", "c"]
+    @test_throws ErrorException fastextrema(unsupported_data)
+end

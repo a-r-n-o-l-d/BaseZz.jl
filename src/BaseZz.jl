@@ -13,7 +13,7 @@ struct MultiThreads end
 
 # To do : histogram multithrede pour grosses images, quantile approx par histogram pour rapidite vision
 
-export XtRealArray, XtFloatArray, XtN0f8Array, fastextrema
+export isnumber, fastextrema
 
 include("utils.jl")
 

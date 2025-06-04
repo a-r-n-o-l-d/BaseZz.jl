@@ -26,39 +26,11 @@ const MultiChannelRealSkipper{P,A<:MultiChannelRealImage} = Skipper.Skip{P,A}
 # ------------------------------------
 
 """
-    isnotnumber(x) -> Bool
-
-Check if `x` is not a valid number.
-
-Returns `true` if `x` is not finite, is `NaN`, or `missing`. Otherwise, returns
-`false`.
-
-# Examples
-```julia
-julia> isnotnumber(NaN)
-true
-
-julia> isnotnumber(Inf)
-true
-
-julia> isnotnumber(missing)
-true
-
-julia> isnotnumber(5.0)
-false
-```
-
-See also: [`isnumber`](@ref)
-"""
-isnotnumber(x) = !isfinite(x) || isnan(x) || ismissing(x)
-
-"""
 isnumber(x) -> Bool
 
 Check if `x` is a valid number.
 
-Returns `true` if `x` is finite and not `NaN` or `missing`. Otherwise, returns
-`false`.
+Returns `true` if `x` is finite and not `NaN`. Otherwise, returns `false`.
 
 # Examples
 ```julia
@@ -70,15 +42,11 @@ false
 
 julia> isnumber(-Inf)
 false
-
-julia> isnumber(missing)
-false
 ```
 
 See also: [`isnotnumber`](@ref)
 """
-isnumber(x) = !isnotnumber(x)
-
+isnumber(x) = isfinite(x) && !isnan(x)
 
 # 3. Function: fastextrema
 # ------------------------
@@ -91,7 +59,7 @@ as a tuple.
 
 `x` can be an array of `Real` numbers, `Gray` colorants, or multi-channel
 colorants `Colorant{T,N}`, where `T` is a `Real` type. If `x` is an array of
-`AbstractFloat` elements, values such as `NaN`, `missing`, `Inf`, or `-Inf` are
+`AbstractFloat` elements, values such as `NaN`, `Inf`, or `-Inf` are
 automatically excluded from the computation. Additionally, `x` can be a `Skip`
 object from the [Skipper.jl](https://github.com/JuliaAPlavin/Skipper.jl)
 package, created using the `skip` or `keep` functions.
@@ -141,7 +109,7 @@ function fastextrema(x::GenericRealImageSkipper)
     return mini, maxi
 end
 
-fastextrema(x::FloatImage) = fastextrema(skip(isnotnumber, x))
+fastextrema(x::FloatImage) = fastextrema(skip(!isnumber, x))
 
 function fastextrema(x::MultiChannelRealImage{T}) where T<:MultiChannelRealPixel
     minis = zeros(eltype(T), length(T))
@@ -175,8 +143,8 @@ The function `fastextrema` is not supported for type: $(typeof(x)). Currently
 supported types include:
     - arrays of `Real` numbers
     - arrays of `Gray` colorants
-    - arrays of `AbstractFloat` numbers, possibly containing `NaN`, `missing`,
-      `Inf`, or `-Inf` values
+    - arrays of `AbstractFloat` numbers, possibly containing `NaN`, `Inf`, or
+      `-Inf` values
     - arrays of multi-channel `Colorant{T,N}`, where `T` is a `Real` type
     - `Skip` types for arrays of the above types, as defined by the `Skipper.jl`
       package
