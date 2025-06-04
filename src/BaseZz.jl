@@ -13,7 +13,7 @@ struct MultiThreads end
 
 # To do : histogram multithrede pour grosses images, quantile approx par histogram pour rapidite vision
 
-export isnumber, fastextrema
+export isnumber, fastextrema, hbox, bbox
 
 include("utils.jl")
 
@@ -45,14 +45,7 @@ end
 =#
 
 # Rectangular range
-function hbox(I::T, J::T; stride = one(I)) where T<:CartesianIndex # stride Int aussi
-  ind = []
-  gp = @. Tuple((I, stride, J))
-  for (i, s, j) ∈ zip(gp...)
-      push!(ind, i:s:j)
-  end
-  Tuple(ind) |> CartesianIndices
-end
+
 
 hbox(i, j) = hbox(CartesianIndex(i...), CartesianIndex(j...))
 

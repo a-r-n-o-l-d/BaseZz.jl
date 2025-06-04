@@ -63,20 +63,22 @@ object from the [Skipper.jl](https://github.com/JuliaAPlavin/Skipper.jl)
 package, created using the `skip` or `keep` functions.
 
 # Examples
+## Example with an array of real numbers
 ```julia
-julia> # Example with an array of real numbers
 julia> data = [1.0, 2.0, 3.0, 4.0, 5.0]
 julia> mini, maxi = fastextrema(data)
 julia> println("Minimum: ", mini, ", Maximum: ", maxi)
 Minimum: 1.0, Maximum: 5.0
-
-julia> # Example with a multi-channel image
-julia> img = rand(RGB{N0f8}, 10, 10) # Random RGB image
+```
+## Example with a multi-channel image
+```julia
+julia> img = rand(RGB{N0f8}, 10, 10)
 julia> mini, maxi = fastextrema(img)
 julia> println("Minimum: ", mini, ", Maximum: ", maxi)
 Minimum: RGB{N0f8}(0.004, 0.004, 0.0), Maximum: RGB{N0f8}(0.996, 0.992, 0.996)
-
-julia> # Example with an 8-bit grayscale image, ignoring all values below 0.5
+```
+## Example with an 8-bit grayscale image, ignoring all values below 0.5
+```julia
 julia> img = rand(Gray{N0f8}, 10, 10)
 julia> mini, maxi = skip(x -> x < 0.5, img) |> fastextrema
 julia> println("Minimum: ", mini, ", Maximum: ", maxi)
@@ -150,6 +152,85 @@ supported types include:
 For more details, refer to the `fastextrema` documentation.
 """
 )
+
+
+# 4. Function: hbox
+# -----------------
+
+"""
+    hbox(I, J; stride=one(I)) -> CI
+
+Construct a `CartesianIndices` range defining a hyperrectangular box from
+`CartesianIndex` `I` to `CartesianIndex` `J` with a specified `stride`. The
+resulting range `CI` can be used to subset a multidimensional array.
+
+# Examples
+## Define starting point `I` and ending point `J`
+```julia
+julia> I = CartesianIndex(3, 3)
+CartesianIndex(3, 3)
+
+julia> J = CartesianIndex(7, 7)
+CartesianIndex(7, 7)
+```
+## Create two boxes, with and without stride
+```julia
+julia> b1 = hbox(I, J)
+CartesianIndices((3:1:7, 3:1:7))
+
+julia> b2 = hbox(I, J, stride=CartesianIndex(2, 2))
+CartesianIndices((3:2:7, 3:2:7))
+```
+## Example of subsetting an array as copy or as view
+```julia
+julia> A = reshape(1:64, 8, 8)
+8×8 reshape(::UnitRange{Int64}, 8, 8) with eltype Int64:
+ 1   9  17  25  33  41  49  57
+ 2  10  18  26  34  42  50  58
+ 3  11  19  27  35  43  51  59
+ 4  12  20  28  36  44  52  60
+ 5  13  21  29  37  45  53  61
+ 6  14  22  30  38  46  54  62
+ 7  15  23  31  39  47  55  63
+ 8  16  24  32  40  48  56  64
+
+julia> A[b1]
+5×5 Matrix{Int64}:
+ 19  27  35  43  51
+ 20  28  36  44  52
+ 21  29  37  45  53
+ 22  30  38  46  54
+ 23  31  39  47  55
+
+julia> A[b2]
+3×3 Matrix{Int64}:
+ 19  35  51
+ 21  37  53
+ 23  39  55
+
+ julia> view(A, b1)
+5×5 view(reshape(::UnitRange{Int64}, 8, 8), 3:1:7, 3:1:7) with eltype Int64:
+ 19  27  35  43  51
+ 20  28  36  44  52
+ 21  29  37  45  53
+ 22  30  38  46  54
+ 23  31  39  47  55
+
+julia> view(A, b2)
+3×3 view(reshape(::UnitRange{Int64}, 8, 8), 3:2:7, 3:2:7) with eltype Int64:
+ 19  35  51
+ 21  37  53
+ 23  39  55
+```
+"""
+function hbox(I::T, J::T; stride = one(I)) where T<:CartesianIndex # stride Int aussi
+  ind = []
+  gp = @. Tuple((I, stride, J))
+  for (i, s, j) ∈ zip(gp...)
+      push!(ind, i:s:j)
+  end
+  return Tuple(ind) |> CartesianIndices
+end
 
 # function approx_quantile fastquantile
 
