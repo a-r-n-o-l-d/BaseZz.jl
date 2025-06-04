@@ -1,10 +1,3 @@
-#=
-# Deliberately not export these constants to enable extensibility for downstream packages
-const NumberLike = Union{Number,AbstractGray}
-const Pixel = Union{Number,Colorant}
-const GenericGrayImage{T<:NumberLike,N} = AbstractArray{T,N}
-const GenericImage{T<:Pixel,N} = AbstractArray{T,N}
-=#
 
 const IntegerPixel{T<:Integer} = Union{T,AbstractGray{T}}
 const RealPixel{T<:Real} = Union{T,AbstractGray{T}}
