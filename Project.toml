@@ -1,7 +1,7 @@
 name = "BaseZz"
 uuid = "76171be9-0d6b-4c15-96ae-d6a41202f9dc"
 authors = ["Arnold"]
-version = "0.1.4"
+version = "0.1.5"
 
 [deps]
 ImageAxes = "2803e5a7-5153-5ecf-9a86-9b4c37f5f5ac"
