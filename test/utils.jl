@@ -41,7 +41,8 @@ end
 # Test with a multi-channel image skipper
 @testset "Multi-channel image skipper" begin
     img = rand(RGB{N0f8}, 10, 10)
-    mini, maxi = fastextrema(skip(x -> x==RGB(0,0,0), img))
+    img[2,2] = RGB(N0f8(0.5), N0f8(0.5), N0f8(0.5))
+    mini, maxi = fastextrema(skip(x -> x==RGB(N0f8(0.5), N0f8(0.5), N0f8(0.5)), img))
     @test red(mini) <= red(maxi)
     @test green(mini) <= green(maxi)
     @test blue(mini) <= blue(maxi)
