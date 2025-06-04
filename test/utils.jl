@@ -1,4 +1,5 @@
-# Test cases for isnumber function
+# 1. Test cases for isnumber function
+# -----------------------------------
 @testset "isnumber tests" begin
     @test isnumber(5.0) == true
     @test isnumber(-3.2) == true
@@ -9,7 +10,8 @@
 end
 
 
-# Test cases for fastextrema function
+# 2. Test cases for fastextrema function
+# --------------------------------------
 
 # Test with an array of real numbers
 @testset "Real numbers" begin

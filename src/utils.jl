@@ -43,8 +43,6 @@ false
 julia> isnumber(-Inf)
 false
 ```
-
-See also: [`isnotnumber`](@ref)
 """
 isnumber(x) = isfinite(x) && !isnan(x)
 
