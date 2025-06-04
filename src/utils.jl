@@ -224,12 +224,12 @@ julia> view(A, b2)
 ```
 """
 function hbox(I::T, J::T; stride=oneunit(I)) where T<:CartesianIndex # stride Int aussi
-  ind = []
-  gp = @. Tuple((I, stride, J))
-  for (i, s, j) ∈ zip(gp...)
-      push!(ind, i:s:j)
-  end
-  return Tuple(ind) |> CartesianIndices
+    ind = []
+    gp = @. Tuple((I, stride, J))
+    for (i, s, j) ∈ zip(gp...)
+        push!(ind, i:s:j)
+    end
+    return Tuple(ind) |> CartesianIndices
 end
 
 
@@ -279,15 +279,18 @@ julia> A[b2]
 ```
 """
 function bbox(A; margin=CartesianIndex(zeros(Int, ndims(A))...))
-  R = CartesianIndices(A)
-  Imin, Imax = last(R), first(R)
-  for I ∈ R
-      if A[I]
-          Imin = min(Imin, I)
-          Imax = max(Imax, I)
-      end
-  end
-  hbox(max(Imin - margin, first(R)), min(Imax + margin, last(R)))
+    if any(A)
+        R = CartesianIndices(A)
+        Imin, Imax = last(R), first(R)
+        for I ∈ R
+            if A[I]
+                Imin = min(Imin, I)
+                Imax = max(Imax, I)
+            end
+        end
+        return hbox(max(Imin - margin, first(R)), min(Imax + margin, last(R)))
+    end
+    return CartesianIndices(A)
 end
 
 #hbox(i, j; stride=oneunit(CartesianIndex(i...))) = hbox(CartesianIndex(i...), CartesianIndex(j...), stride=stride)

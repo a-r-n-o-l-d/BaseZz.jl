@@ -115,3 +115,77 @@ end
     expected_subset = [19 27 35 43 51; 20 28 36 44 52; 21 29 37 45 53; 22 30 38 46 54; 23 31 39 47 55]
     @test subset == expected_subset
 end
+
+
+# 4. Test cases for bbox function
+# -------------------------------
+
+# Test for basic bounding box without margin
+@testset "Basic bounding box without margin" begin
+    A = [
+        false false true false false;
+        false true  true false false;
+        false false true false false
+    ]
+    result = bbox(A)
+    expected = CartesianIndices((1:1:3, 2:1:3))
+    @test result == expected
+end
+
+# Test for bounding box with margin
+@testset "Bounding box with margin" begin
+    A = [
+        false false true false false;
+        false true  true true  false;
+        false false true false false
+    ]
+    margin = CartesianIndex(1, 1)
+    result = bbox(A, margin=margin)
+    expected = CartesianIndices((1:1:3, 1:1:5))
+    @test result == expected
+end
+
+# Test for subsetting an array using the bounding box
+@testset "Subsetting an array using the bounding box" begin
+    A = [
+        false false true false false;
+        false true  true false false;
+        false false true false false
+    ]
+    indices = bbox(A)
+    subset = A[indices]
+    expected = [
+        false true;
+        true  true;
+        false true
+    ]
+    @test subset == expected
+end
+
+# Test for subsetting an array using the bounding box with margin
+@testset "Subsetting an array using the bounding box with margin" begin
+    A = [
+        false false true false false;
+        false true  true false false;
+        false false true false false
+    ]
+    margin = CartesianIndex(1, 1)
+    indices = bbox(A, margin=margin)
+    subset = A[indices]
+    expected = [
+        false false true false;
+        false true  true false;
+        false false true false
+    ]
+    @test subset == expected
+end
+
+# Test for an array with no true elements
+@testset "Bounding box with no true elements" begin
+    A = [
+        false false false;
+        false false false
+    ]
+    result = bbox(A)
+    @test result == CartesianIndices(A)
+end
