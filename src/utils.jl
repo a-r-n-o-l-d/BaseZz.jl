@@ -145,9 +145,6 @@ argument and does not support generic iterable collections. Despite this,
 """
 fastextrema
 
-# 2 times faster than Base.extrema for float thanks to Skipper.jl (no big benefit for Int), but maybe unsafe
-# a little faster than minimum or maximum for float, two times faster for Int (not sure)
-# To do: design clean microbenchmarks (on other ubuntu machine)
 function fastextrema(x::GenericRealImageSkipper)
     mini = x |> eltype |> typemax
     maxi = x |> eltype |> typemin
@@ -162,16 +159,15 @@ function fastextrema(x::GenericRealImageSkipper)
     return mini, maxi
 end
 
-fastextrema(x::FloatImage) = fastextrema(skip(isnotnumber, x)) #where T<:AbstractFloat
+fastextrema(x::FloatImage) = fastextrema(skip(isnotnumber, x))
 
 function fastextrema(x::MultiChannelRealImage{T}) where T<:MultiChannelRealPixel
-    #extvals = [(zero(eltype(T)), zero(eltype(T))) for _ in 1:length(T)]
     minis = zeros(eltype(T), length(T))
     maxis = zeros(eltype(T), length(T))
     for (i, ch) in eachslice(channelview(x), dims=1) |> enumerate
         minis[i], maxis[i] = fastextrema(ch)
     end
-    return T(minis...), T(maxis...) #extvals
+    return T(minis...), T(maxis...)
 end
 
 function fastextrema(x::MultiChannelRealSkipper{P,A}) where {P,A}
