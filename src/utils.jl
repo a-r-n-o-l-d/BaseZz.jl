@@ -6,19 +6,14 @@ const GenericGrayImage{T<:NumberLike,N} = AbstractArray{T,N}
 const GenericImage{T<:Pixel,N} = AbstractArray{T,N}
 =#
 
-# NOTE: remove Generic?? to have shorter names
-
+const IntegerPixel{T<:Integer} = Union{T,AbstractGray{T}}
 const RealPixel{T<:Real} = Union{T,AbstractGray{T}}
-# Complex int...?
-const FloatPixel{T<:AbstractFloat} = Union{T,AbstractGray{T}} #,<:Color{AbstractFloat,1}
-#const GenericRealIterable = Union{AbstractArray{RealPixel}}
+const FloatPixel{T<:AbstractFloat} = Union{T,AbstractGray{T}}
+const ComplexPixel{T<:Complex} = Union{T,AbstractGray{T}}
+
 const RealImage{T<:RealPixel,N} = AbstractArray{T,N}
 const FloatImage{T<:FloatPixel,N} = AbstractArray{T,N}
-#=
-RealArraySkipper{P} = Skipper.Skip{P,GenericRealImage}
-RealArraySkipper2{P} = Skipper.Skip{P,<:GenericRealImage}
-RealArraySkipper3{P,A<:GenericRealImage} = Skipper.Skip{P,A}
-=#
+
 const RealSkipper{P,A<:RealImage} = Skipper.Skip{P,A}
 const GenericRealImageSkipper = Union{RealImage,RealSkipper}
 
@@ -26,26 +21,6 @@ const MultiChannelRealPixel{T<:Real,N} = Color{T,N}
 const MultiChannelRealImage{T<:MultiChannelRealPixel,N} = AbstractArray{T,N}
 
 const MultiChannelRealSkipper{P,A<:MultiChannelRealImage} = Skipper.Skip{P,A}
-#const GenericMultiChannelRealImageSkipper{T<:MultiChannelRealPixel} = Union{GenericMultiChannelRealImage{T},<:GenericMultiChannelRealSkipper{P,GenericMultiChannelRealImage{T}}} where P
-
-#=
-const XtRealArray = Union{
-    AbstractArray{<:Real},
-    AbstractArray{<:Color{<:Real,1}},
-    Skipper.Skip{<:Any,<:AbstractArray{<:Real}},
-    Skipper.Skip{<:Any,<:AbstractArray{<:Color{<:Real,1}}}
-}
-
-const XtFloatArray = Union{
-    AbstractArray{<:AbstractFloat},
-    AbstractArray{<:Color{<:AbstractFloat,1}}
-}
-
-const XtN0f8Array = Union{
-    AbstractArray{<:N0f8},
-    AbstractArray{<:Color{<:N0f8,1}}
-}
-=#
 
 """
     isnotnumber(x) -> Bool
