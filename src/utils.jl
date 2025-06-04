@@ -122,8 +122,8 @@ end
 
 function fastextrema(x::MultiChannelRealSkipper{P,A}) where {P,A}
     T = eltype(A)
-    minis = zeros(eltype(T), length(T))
-    maxis = zeros(eltype(T), length(T))
+    minis = fill(eltype(T) |> typemax, length(T))
+    maxis = fill(eltype(T) |> typemin, length(T))
     @inbounds for v in x
         @inbounds for (i, chv) in channelview([v]) |> enumerate # not very clean, but it works
             if chv < minis[i]
