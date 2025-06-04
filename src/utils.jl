@@ -223,7 +223,7 @@ julia> view(A, b2)
  23  39  55
 ```
 """
-function hbox(I::T, J::T; stride = oneunit(I)) where T<:CartesianIndex # stride Int aussi
+function hbox(I::T, J::T; stride=oneunit(I)) where T<:CartesianIndex # stride Int aussi
   ind = []
   gp = @. Tuple((I, stride, J))
   for (i, s, j) ∈ zip(gp...)
@@ -231,6 +231,8 @@ function hbox(I::T, J::T; stride = oneunit(I)) where T<:CartesianIndex # stride 
   end
   return Tuple(ind) |> CartesianIndices
 end
+
+#hbox(i, j; stride=oneunit(CartesianIndex(i...))) = hbox(CartesianIndex(i...), CartesianIndex(j...), stride=stride)
 
 # function approx_quantile fastquantile
 

@@ -47,7 +47,7 @@ end
 # Rectangular range
 
 
-hbox(i, j) = hbox(CartesianIndex(i...), CartesianIndex(j...))
+
 
 # BoundingBox
 function bbox(A, b = 0)
