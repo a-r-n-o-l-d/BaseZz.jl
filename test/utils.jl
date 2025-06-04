@@ -38,6 +38,15 @@ end
     @test blue(mini) <= blue(maxi)
 end
 
+# Test with a multi-channel image skipper
+@testset "Multi-channel image skipper" begin
+    img = rand(RGB{N0f8}, 10, 10)
+    mini, maxi = fastextrema(skip(x -> x==RGB(0,0,0), img))
+    @test red(mini) <= red(maxi)
+    @test green(mini) <= green(maxi)
+    @test blue(mini) <= blue(maxi)
+end
+
 # Test with a grayscale image using Skipper.jl
 @testset "Grayscale image with Skipper" begin
     img = rand(Gray{N0f8}, 10, 10)
