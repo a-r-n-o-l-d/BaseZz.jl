@@ -247,6 +247,9 @@ that contains all the `true` elements. The resulting bounding box can be
 expanded by a specified `margin` in all directions. The `margin` is constrained
 to the dimensions of the array `A`.
 
+If the array contains no `true` values, an error is thrown. If all elements are
+`true`, the bounding box will encompass the entire array.
+
 # Example
 ```julia
 julia> A = [
@@ -279,16 +282,24 @@ julia> A[b2]
 ```
 """
 function bbox(A; margin=CartesianIndex(zeros(Int, ndims(A))...))
-    if any(A)
-        R = CartesianIndices(A)
-        Imin, Imax = last(R), first(R)
-        for I ∈ R
-            if A[I]
-                Imin = min(Imin, I)
-                Imax = max(Imax, I)
-            end
-        end
-        return hbox(max(Imin - margin, first(R)), min(Imax + margin, last(R)))
+    if !any(A)
+        error(
+            """
+            The input array must contain at least one `true`` value to compute a bounding
+            box.
+            """
+        )
     end
-    return CartesianIndices(A)
+    if all(A)
+        return CartesianIndices(A)
+    end
+    R = CartesianIndices(A)
+    Imin, Imax = last(R), first(R)
+    for I ∈ R
+        if A[I]
+            Imin = min(Imin, I)
+            Imax = max(Imax, I)
+        end
+    end
+    return hbox(max(Imin - margin, first(R)), min(Imax + margin, last(R)))
 end

@@ -180,12 +180,21 @@ end
     @test subset == expected
 end
 
-# Test for an array with no true elements
-@testset "Bounding box with no true elements" begin
+# Test for bounding box encompassing the entire array when all elements are true
+@testset "Bounding box for all true elements" begin
+    A = [
+        true true true;
+        true true true
+    ]
+    result = bbox(A)
+    @test result == CartesianIndices(A)
+end
+
+# Test for error when the array contains no `true` values
+@testset "Error when no true values" begin
     A = [
         false false false;
         false false false
     ]
-    result = bbox(A)
-    @test result == CartesianIndices(A)
+    @test_throws ErrorException bbox(A)
 end
