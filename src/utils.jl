@@ -101,8 +101,6 @@ See also: [`isnotnumber`](@ref)
 """
 isnumber(x) = !isnotnumber(x)
 
-# as_finite(x) = skip(isnan || !isfinite, x)
-
 """
     fastextrema(x) -> (mini, maxi)
 
@@ -194,15 +192,19 @@ function fastextrema(x::MultiChannelRealSkipper{P,A}) where {P,A}
 end
 
 fastextrema(x) = error(
-    """
-    Function `fastextrema` is not supported for type: $(typeof(x)). Currently supported types are:
-        - arrays of `Real` numbers
-        - arrays of `Gray` colorants
-        - arrays of `AbstractFloat` numbers with eventually `NaN`, `missing`, `Inf` or `-Inf` values
-        - arrays of multi-channels `Colorant{T,N}` where `T` is a `Real` type
-        - a `Skip` type for arrays of above types defined by package `Skipper.jl`
-    See `fastextrema` documentation for more details.
-    """
+"""
+The function `fastextrema` is not supported for type: $(typeof(x)). Currently
+supported types include:
+    - arrays of `Real` numbers
+    - arrays of `Gray` colorants
+    - arrays of `AbstractFloat` numbers, possibly containing `NaN`, `missing`,
+      `Inf`, or `-Inf` values
+    - arrays of multi-channel `Colorant{T,N}`, where `T` is a `Real` type
+    - `Skip` types for arrays of the above types, as defined by the `Skipper.jl`
+      package
+
+For more details, refer to the `fastextrema` documentation.
+"""
 )
 
 # function approx_quantile
