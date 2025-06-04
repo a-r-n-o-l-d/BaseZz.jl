@@ -50,16 +50,6 @@ end
 
 
 # BoundingBox
-function bbox(A, b = 0)
-  R = CartesianIndices(A)
-  Imin, Imax = last(R), first(R)
-  for I ∈ R
-      if A[I]
-          Imin = min(Imin, I)
-          Imax = max(Imax, I)
-      end
-  end
-  hbox(max(Imin - b, first(R)), min(Imax + b, last(R)))
-end
+
 
 end

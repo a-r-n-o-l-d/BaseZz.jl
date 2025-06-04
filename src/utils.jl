@@ -232,6 +232,64 @@ function hbox(I::T, J::T; stride=oneunit(I)) where T<:CartesianIndex # stride In
   return Tuple(ind) |> CartesianIndices
 end
 
+
+# 5. Function: bbox
+# -----------------
+
+"""
+    bbox(A; margin=CartesianIndex(zeros(Int, ndims(A))...)) -> CI
+
+Compute the bounding box of `true` elements in array `A` and return it as a
+`CartesianIndices` range.
+
+This function scans the boolean array `A` to find the smallest hyperrectangle
+that contains all the `true` elements. The resulting bounding box can be
+expanded by a specified `margin` in all directions. The `margin` is constrained
+to the dimensions of the array `A`.
+
+# Example
+```julia
+julia> A = [
+    false false true false false;
+    false true  true false false;
+    false false true false false
+]
+3×5 Matrix{Bool}:
+ 0  0  1  0  0
+ 0  1  1  0  0
+ 0  0  1  0  0
+
+julia> b1 = bbox(A)
+CartesianIndices((2:3, 2:3))
+
+julia> b2 = bbox(A, margin=CartesianIndex(1,1))
+CartesianIndices((1:3, 1:3))
+
+julia> A[b1]
+3×2 Matrix{Bool}:
+ 0  1
+ 1  1
+ 0  1
+
+julia> A[b2]
+3×4 Matrix{Bool}:
+ 0  0  1  0
+ 0  1  1  0
+ 0  0  1  0
+```
+"""
+function bbox(A; margin=CartesianIndex(zeros(Int, ndims(A))...))
+  R = CartesianIndices(A)
+  Imin, Imax = last(R), first(R)
+  for I ∈ R
+      if A[I]
+          Imin = min(Imin, I)
+          Imax = max(Imax, I)
+      end
+  end
+  hbox(max(Imin - margin, first(R)), min(Imax + margin, last(R)))
+end
+
 #hbox(i, j; stride=oneunit(CartesianIndex(i...))) = hbox(CartesianIndex(i...), CartesianIndex(j...), stride=stride)
 
 # function approx_quantile fastquantile
