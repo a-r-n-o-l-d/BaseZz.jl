@@ -1,12 +1,14 @@
+# To do: add Aqua.jl
 module BaseZz
 
-using Reexport
-@reexport using ImageCore, ImageBase, ImageAxes, ImageMetadata, Skipper
+#using Reexport
+#@reexport # fou la merde avec aqua
+using ImageCore, ImageBase, ImageAxes, ImageMetadata, Skipper
 # ColorTypes, Colors, FixedPointNumber
 #using Skipper
 using .Threads: @threads, nthreads, threadid
 
-export SingleThread, MultiThreads
+#export SingleThread, MultiThreads
 
 struct SingleThread end
 struct MultiThreads end
