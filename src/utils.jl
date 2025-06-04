@@ -1,3 +1,9 @@
+########################################################################################################################
+#                                                   COMMON UTILITIES                                                   #
+########################################################################################################################
+
+# 1. Type aliases
+# ---------------
 
 const IntegerPixel{T<:Integer} = Union{T,AbstractGray{T}}
 const RealPixel{T<:Real} = Union{T,AbstractGray{T}}
@@ -14,6 +20,10 @@ const MultiChannelRealPixel{T<:Real,N} = Color{T,N}
 const MultiChannelRealImage{T<:MultiChannelRealPixel,N} = AbstractArray{T,N}
 
 const MultiChannelRealSkipper{P,A<:MultiChannelRealImage} = Skipper.Skip{P,A}
+
+
+# 2. Functions: isnotnumber & isnumber
+# ------------------------------------
 
 """
     isnotnumber(x) -> Bool
@@ -68,6 +78,10 @@ false
 See also: [`isnotnumber`](@ref)
 """
 isnumber(x) = !isnotnumber(x)
+
+
+# 3. Function: fastextrema
+# ------------------------
 
 """
     fastextrema(x) -> (mini, maxi)
@@ -171,7 +185,7 @@ For more details, refer to the `fastextrema` documentation.
 """
 )
 
-# function approx_quantile
+# function approx_quantile fastquantile
 
 #=
 function extremaz(::Type{SingleThread}, x) # 2 fois plus rapide que extrema
