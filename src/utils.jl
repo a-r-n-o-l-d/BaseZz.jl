@@ -47,7 +47,58 @@ const XtN0f8Array = Union{
 }
 =#
 
+"""
+    isnotnumber(x) -> Bool
+
+Check if `x` is not a valid number.
+
+Returns `true` if `x` is not finite, is `NaN`, or `missing`. Otherwise, returns
+`false`.
+
+# Examples
+```julia
+julia> isnotnumber(NaN)
+true
+
+julia> isnotnumber(Inf)
+true
+
+julia> isnotnumber(missing)
+true
+
+julia> isnotnumber(5.0)
+false
+```
+
+See also: [`isnumber`](@ref)
+"""
 isnotnumber(x) = !isfinite(x) || isnan(x) || ismissing(x)
+
+"""
+isnumber(x) -> Bool
+
+Check if `x` is a valid number.
+
+Returns `true` if `x` is finite and not `NaN` or `missing`. Otherwise, returns
+`false`.
+
+# Examples
+```julia
+julia> isnumber(5.0)
+true
+
+julia> isnumber(NaN)
+false
+
+julia> isnumber(-Inf)
+false
+
+julia> isnumber(missing)
+false
+```
+
+See also: [`isnotnumber`](@ref)
+"""
 isnumber(x) = !isnotnumber(x)
 
 # as_finite(x) = skip(isnan || !isfinite, x)
@@ -67,29 +118,32 @@ package, created using the `skip` or `keep` functions.
 
 # Examples
 ```julia
-# Example with an array of real numbers
-data = [1.0, 2.0, 3.0, 4.0, 5.0]
-mini, maxi = fastextrema(data)
-println("Minimum: ", mini, ", Maximum: ", maxi)
+julia> # Example with an array of real numbers
+julia> data = [1.0, 2.0, 3.0, 4.0, 5.0]
+julia> mini, maxi = fastextrema(data)
+julia> println("Minimum: ", mini, ", Maximum: ", maxi)
+Minimum: 1.0, Maximum: 5.0
 
-# Example with a multi-channel image
-img = rand(RGB, 10, 10) # Random RGB image
-mini, maxi = fastextrema(img)
-println("Minimum: ", mini, ", Maximum: ", maxi)
+julia> # Example with a multi-channel image
+julia> img = rand(RGB{N0f8}, 10, 10) # Random RGB image
+julia> mini, maxi = fastextrema(img)
+julia> println("Minimum: ", mini, ", Maximum: ", maxi)
+Minimum: RGB{N0f8}(0.004, 0.004, 0.0), Maximum: RGB{N0f8}(0.996, 0.992, 0.996)
 
-# Example with an 8-bit grayscale image, ignoring all values below 0.5
-img = rand(Gray{N0f8}, 10, 10)
-mini, maxi = skip(x -> x < 0.5, img) |> fastextrema
-println("Minimum: ", mini, ", Maximum: ", maxi)
+julia> # Example with an 8-bit grayscale image, ignoring all values below 0.5
+julia> img = rand(Gray{N0f8}, 10, 10)
+julia> mini, maxi = skip(x -> x < 0.5, img) |> fastextrema
+julia> println("Minimum: ", mini, ", Maximum: ", maxi)
+Minimum: Gray{N0f8}(0.51), Maximum: Gray{N0f8}(0.984)
 ```
 
 # Note
-Microbenchmarks indicate that fastextrema is about twice as fast as
-Base.extrema for floating-point numbers, but shows no significant benefit for
-integers. The advantage of fastextrema lies in its support for Skipper.jl.
-However, it is less versatile than Base.extrema as it lacks the dims
+Microbenchmarks indicate that `fastextrema` is about twice as fast as
+`Base.extrema` for floating-point numbers, but shows no significant benefit for
+integers. The advantage of `fastextrema` lies in its support for Skipper.jl.
+However, it is less versatile than `Base.extrema` as it lacks the `dims`
 argument and does not support generic iterable collections. Despite this,
-fastextrema remains sufficient for image processing tasks.
+`fastextrema` should remain sufficient for image processing tasks.
 """
 fastextrema
 
